@@ -32,9 +32,7 @@ class ListFragment < MarkdownFragment
 
   def _default_render_options
     options = {}
-    if Prawn::VERSION =~ /^0.1/ || Prawn::VERSION =~ /^1/
-      options = options.merge({:cell_style =>  { :inline_format => true}})
-    end
+    options = options.merge({:cell_style => {:padding=>[0, 0, 0, 0], :inline_format => true}})
     options
   end  
   

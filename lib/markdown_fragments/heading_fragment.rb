@@ -3,18 +3,16 @@ class HeadingFragment < MarkdownFragment
   
     def render_on(pdf_object, options = {})
       arguments = _default_render_options.merge(options)
-      pdf_object.move_down(@level * 2)
+      pdf_object.move_down(@level)
       pdf_object.text @content.join(' '), arguments
-      pdf_object.move_down(@level * 2)
+      pdf_object.move_down(@level)
     end
 
   private
 
     def _default_render_options
       options = { :size => (40 - (8*@level)), :align => :left, :leading => 2, :weight => :bold }
-      if Prawn::VERSION =~ /^0.1/ || Prawn::VERSION =~ /^1/
-        options.merge({:inline_format => true})
-      end
+      options.merge({:inline_format => true})
       options
     end
 end

@@ -14,11 +14,7 @@ private
 
   def _default_render_options
     options = { :size => 12, :align => :left, :leading => 2 }
-    if Prawn::VERSION =~ /^0.1/ || Prawn::VERSION =~ /^1/
-      options = options.merge({:inline_format => true})
-    else
-      options = options.merge({:inline_format => false})
-    end
+    options = options.merge({:inline_format => true})
     options
   end
 
