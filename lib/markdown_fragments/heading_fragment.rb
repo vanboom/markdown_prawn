@@ -11,7 +11,7 @@ class HeadingFragment < MarkdownFragment
   private
 
     def _default_render_options
-      options = { :size => (40 - (8*@level)), :align => :left, :leading => 2, :weight => :bold }
+      options = { :size => (40 - (8*@level)), :align => :left, :leading => 2, :weight => :bold, :color=>'444444' }
       options.merge({:inline_format => true})
       options
     end

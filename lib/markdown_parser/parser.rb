@@ -21,7 +21,7 @@ module MarkdownPrawn
     #
     def to_pdf(options = {})
       parse!
-      options = { :page_layout =>  :portrait, :page_size => 'A4' }.merge(options)
+      options = { :page_layout =>  :portrait, :page_size => 'LETTER' }.merge(options)
       pdf = Prawn::Document.new(options)
       @document_structure.each { |markdown_fragment| markdown_fragment.render_on(pdf) }
       pdf
@@ -39,8 +39,8 @@ module MarkdownPrawn
       list = ListFragment.new
       in_list = false
       @content.each_with_index do |line, index|
-        line = process_inline_formatting(line)
-        line = process_inline_hyperlinks(line)
+#        line = process_inline_formatting(line)
+#        line = process_inline_hyperlinks(line)
 
         # Assume everything is part of a paragraph by default and
         # add its content to the current in-scope paragraph object.
@@ -168,21 +168,9 @@ module MarkdownPrawn
           @links_list[:urls_seen] << url
           @links_list[:object].content <<  [ reference, url, "#{title}" ]
         end
-
-        # Deal with inline hyperlinks, which are similar to
-        # images.
-        #
-        line.scan(/(?:^|\s)?(\[(.+?)\]\((.+?)\))/) do |val|
-          paragraph.content = paragraph.content.delete_if { |i| i == line }
-          l = LinkFragment.new([val[1],val[2]])
-          if @links_list[:urls_seen].include?(val[2])
-            else
-            # don't do this reference stuff: @links_list[:urls_seen] << val[2]
-            @links_list[:object].content <<  [ '12', val[2], val[1] ]
-          end
-          #        paragraph.content[-1] = paragraph.content[-1].gsub(val[0],'[Link][12]')
-          @document_structure << l
-        end
+        
+        # inline monospace format, single `
+        # monospace block ```
 
         # Deal with blockquote
         #
@@ -190,8 +178,17 @@ module MarkdownPrawn
           paragraph.content = paragraph.content.delete_if { |i| i == line }
           hashes = $1.dup
           blockquote = BlockquoteFragment.new([line[1..-1]])
-        @document_structure << blockquote
+          # start a new paragraph
+          #@document_structure << blockquote
+          paragraph = blockquote
         end
+
+        line.scan( /^(```)/ ) do |val|
+          paragraph.content = paragraph.content.delete_if { |i| i == line }
+          pre = PreFragment.new([line])
+          paragraph = pre 
+        end
+
 
         to_replace = []
 
@@ -225,26 +222,15 @@ module MarkdownPrawn
       }.join("\n")
     end
 
-    def process_inline_hyperlinks(line)
-      # Deal with inline hyperlinks, which are similar to
-      # images.
-      #
-      line.scan(/(?:^|\s)?(\[(.+?)\]\((.+?)\))/) do |val|
-        l = LinkFragment.new([val[1],val[2]])
-        #        paragraph.content[-1] = paragraph.content[-1].gsub(val[0],'[Link][12]')
-        line.gsub(val[0], "<a href='%s'>%s</a>" % [val[2], val[1]])
-      end
-    end
-
     # Only do Inline formatting for versions of Prawn which support it.
     #
     def process_inline_formatting(str)
       breg = [ %r{ \b(\_\_) (\S|\S.*?\S) \1\b }x, %r{ (\*\*) (\S|\S.*?\S) \1 }x ]
       ireg = [ %r{ (\*) (\S|\S.*?\S) \1 }x, %r{ \b(_) (\S|\S.*?\S) \1\b }x ]
       if Prawn::VERSION =~ /^0.1/ || Prawn::VERSION =~ /^1/ || Prawn::VERSION =~ /^2/
-        str.gsub(breg[0], %{<b>\\2</b>} ).gsub(breg[1], %{<b>\\2</b>} ).gsub(ireg[0], %{<i>\\2</i>} ).gsub(ireg[1], %{<i>\\2</i>} )
+        str = str.gsub(breg[0], %{<b>\\2</b>} ).gsub(breg[1], %{<b>\\2</b>} ).gsub(ireg[0], %{<i>\\2</i>} ).gsub(ireg[1], %{<i>\\2</i>} )
       else
-        str.gsub(breg[0], %{\\2} ).gsub(breg[1], %{\\2} ).gsub(ireg[0], %{\\2} ).gsub(ireg[1], %{\\2} )
+        str = str.gsub(breg[0], %{\\2} ).gsub(breg[1], %{\\2} ).gsub(ireg[0], %{\\2} ).gsub(ireg[1], %{\\2} )
       end
     end
 
