@@ -39,13 +39,21 @@ module MarkdownPrawn
       list = ListFragment.new
       in_list = false
       @content.each_with_index do |line, index|
-#        line = process_inline_formatting(line)
-#        line = process_inline_hyperlinks(line)
+      #        line = process_inline_formatting(line)
+      #        line = process_inline_hyperlinks(line)
 
-        # Assume everything is part of a paragraph by default and
-        # add its content to the current in-scope paragraph object.
-        #
+      # Assume everything is part of a paragraph by default and
+      # add its content to the current in-scope paragraph object.
+      #
         paragraph.content << line
+
+        # finish a preformatted block
+        if /^(```)/.match(line).present? and paragraph.instance_of? PreFragment
+          # skip and reset
+          line = ""
+        end
+
+        # finish the last paragraph and start a new one
         if line == ""
           unless paragraph.content.empty?
             @document_structure << paragraph
@@ -168,7 +176,7 @@ module MarkdownPrawn
           @links_list[:urls_seen] << url
           @links_list[:object].content <<  [ reference, url, "#{title}" ]
         end
-        
+
         # inline monospace format, single `
         # monospace block ```
 
@@ -178,17 +186,16 @@ module MarkdownPrawn
           paragraph.content = paragraph.content.delete_if { |i| i == line }
           hashes = $1.dup
           blockquote = BlockquoteFragment.new([line[1..-1]])
-          # start a new paragraph
-          #@document_structure << blockquote
-          paragraph = blockquote
+        # start a new paragraph
+        #@document_structure << blockquote
+        paragraph = blockquote
         end
 
         line.scan( /^(```)/ ) do |val|
           paragraph.content = paragraph.content.delete_if { |i| i == line }
           pre = PreFragment.new([line])
-          paragraph = pre 
+          paragraph = pre
         end
-
 
         to_replace = []
 
@@ -203,6 +210,19 @@ module MarkdownPrawn
         to_replace.each { |v| line.gsub!(v) }
         to_replace = []
 
+        # parse markup tables
+        unless /\|/.match(line).nil?
+          paragraph.content = paragraph.content.delete_if { |i| i == line }
+          line.chomp!("|")
+          line.reverse!.chomp!("|").reverse!
+          puts line.split("|").inspect
+          if paragraph.instance_of? TableFragment
+            # continue the table
+            paragraph.content << line.split("|")
+          else
+            paragraph = TableFragment.new([line.split("|")])
+          end
+        end
       end
       if !list.content.empty? && ! @document_structure.include?(list)
         @document_structure << list
