@@ -1,4 +1,4 @@
-description = "Markdown Parawn is a library and an executable script which allow you to generate a PDF from any valid Markdown." 
+description = "Markdown Parawn is a library and an executable script which allow you to generate a PDF from any valid Markdown. Thanks to Ryan Stenhouse for starting this development!" 
 Gem::Specification.new do |spec|
   spec.name = "markdown_prawn"
   spec.version = '0.0.4.pre'
@@ -11,11 +11,11 @@ Gem::Specification.new do |spec|
 
   spec.test_files = Dir[ "test/*_test.rb" ]
   spec.has_rdoc = false
-  spec.author = "Ryan Stenhouse"
-  spec.email = "ryan@ryanstenhouse.eu"
+  spec.author = "Don Vanboom"
+  spec.email = "dvboom@hotmail.com"
   spec.rubyforge_project = "markdown_prawn"
   spec.add_dependency('prawn')
-  spec.homepage = "http://ryanstenhouse.eu"
+  spec.homepage = "http://github.com/vanboom"
   spec.summary = description
   spec.description = description
   spec.executables << 'md2pdf'
