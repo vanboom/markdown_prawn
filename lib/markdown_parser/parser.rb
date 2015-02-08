@@ -45,7 +45,9 @@ module MarkdownPrawn
       # Assume everything is part of a paragraph by default and
       # add its content to the current in-scope paragraph object.
       #
-        paragraph.content << line
+        unless paragraph.instance_of? TableFragment
+          paragraph.content << line
+        end
 
         # finish a preformatted block
         if /^(```)/.match(line).present? and paragraph.instance_of? PreFragment

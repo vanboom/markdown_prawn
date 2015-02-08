@@ -42,13 +42,16 @@ class MarkdownFragment
   def code(pdf, pre_text)
     #pre_text = ::CodeRay.scan(pre_text, :ruby).to_prawn
     pdf.font('Courier', :size => 12) do
-      colored_box(pdf, pre_text)
+      #colored_box(pdf, pre_text)
+      pdf.indent(32) do
+        pdf.formatted_text(pre_text)
+      end
     end
   end
 
   # Renders a Bounding Box with some background color and the formatted text
   # inside it
-  #
+  # This stinks = we need a better way to do shaded boxes!
   def colored_box(pdf, box_text, options={})
     options = { :fill_color   => LIGHT_GRAY,
       :stroke_color => nil,

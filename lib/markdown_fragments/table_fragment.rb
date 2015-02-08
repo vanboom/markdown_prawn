@@ -5,7 +5,9 @@ class TableFragment < MarkdownFragment
     rows = []
     # if the table has a header
     i = 0
+    puts "DOING TABLE FRAGMENT"
     @content.each do |line|
+      puts line.inspect
       if line.join("").include?("---")
         headers << i-1
       else
