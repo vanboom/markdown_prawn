@@ -206,6 +206,7 @@ module MarkdownPrawn
         line.scan(/(?:^|\s)?(\!\[(?:.+?)\]\((.+?)\))/) do |val|
           paragraph.content[-1] = paragraph.content[-1].gsub(val[0],'')
           to_replace << val[0]
+          # TODO: parse and handle the image caption also
           @document_structure << ImageFragment.new([val[1]])
         end
 
@@ -217,7 +218,6 @@ module MarkdownPrawn
           paragraph.content = paragraph.content.delete_if { |i| i == line }
           line.chomp!("|")
           line.reverse!.chomp!("|").reverse!
-          puts line.split("|").inspect
           if paragraph.instance_of? TableFragment
             # continue the table
             paragraph.content << line.split("|")
