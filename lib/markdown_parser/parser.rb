@@ -68,9 +68,9 @@ module MarkdownPrawn
         unless /^(#+)(\s?)\S/.match(line).nil?
           paragraph.content = paragraph.content.delete_if { |i| i == line }
           hashes = $1.dup
-          heading = HeadingFragment.new([line.gsub(hashes,'')])
-        heading.level = hashes.length
-        @document_structure << heading
+          heading = HeadingFragment.new([line.gsub(hashes,'').strip])
+          heading.level = hashes.length
+          @document_structure << heading
         end
 
         # Deal with Level 1 Headings
@@ -80,8 +80,8 @@ module MarkdownPrawn
             item == line || item == @content[index - 1]
           end
           heading = HeadingFragment.new([@content[index - 1]])
-        heading.level = 1
-        @document_structure << heading
+          heading.level = 1
+          @document_structure << heading
         end
 
         # Deal with Level 2 Headings or horizontal rules.
