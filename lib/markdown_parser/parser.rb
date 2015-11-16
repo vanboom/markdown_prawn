@@ -56,12 +56,13 @@ module MarkdownPrawn
         end
 
         # finish the last paragraph and start a new one
-        if line == ""
-          unless paragraph.content.empty?
-            @document_structure << paragraph
-            paragraph = ParagraphFragment.new
-          end
-        end
+        # removed this - causing white space after headings, which is handled by the leading style
+        #if line == ""
+        #  unless paragraph.content.empty?
+        #    @document_structure << paragraph
+        #    paragraph = ParagraphFragment.new
+        #  end
+        #end
 
         # Deal with inline headings
         #
