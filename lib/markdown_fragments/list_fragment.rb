@@ -1,5 +1,6 @@
 class ListFragment < MarkdownFragment
   attr_accessor :ordered
+
   def render_on(pdf, options = {})
     bullet = '• '
     arguments = _default_render_options.merge(options)
@@ -22,16 +23,12 @@ class ListFragment < MarkdownFragment
     #    end
     #    pdf.move_down(5)
     w = data.collect{|d| pdf.width_of(d[0]) + 4}.max
+    h = data.collect{|d| pdf.height_of(d[0])}.max
     data.each do |row|
-      pdf.float do
-        pdf.span(w, :position=>:left) do
-          pdf.formatted_text(format_line(row[0]))
-        end
-      end
-      pdf.span(pdf.bounds.width-w-4, :position=>:right) do
-        pdf.formatted_text(format_line(row[1]))
-      end
+      pdf.formatted_text(format_line(row[0]))
+      pdf.formatted_text_box(format_line(row[1]), :at=>[w, pdf.cursor+h])
     end
+    pdf.move_down pdf.height_of_formatted(format_line(data.last[1]))
   end
 
   def ordered?
