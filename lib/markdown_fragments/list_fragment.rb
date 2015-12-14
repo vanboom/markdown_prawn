@@ -27,7 +27,6 @@ class ListFragment < MarkdownFragment
     data.each do |row|
       pdf.formatted_text(format_line(row[0]))
       pdf.formatted_text_box(format_line(row[1]), :at=>[w, pdf.cursor+h])
-      puts row.inspect
       pdf.move_down pdf.height_of_formatted(format_line(row[0] + "    " + row[1]))-h
     end
     pdf.move_down pdf.height_of_formatted(format_line(data.last[1]))
