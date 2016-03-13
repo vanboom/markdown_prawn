@@ -57,7 +57,7 @@ module MarkdownPrawn
 
         # finish the last paragraph and start a new one
         if line == ""
-          unless paragraph.content.empty?
+          unless paragraph.content.join("").empty?
             @document_structure << paragraph
             paragraph = ParagraphFragment.new
           end
