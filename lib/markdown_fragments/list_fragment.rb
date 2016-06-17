@@ -22,7 +22,7 @@ class ListFragment < MarkdownFragment
     #       column(0).style( { :width => 20  })
     #    end
     #    pdf.move_down(5)
-    w = data.collect{|d| pdf.width_of(d[0]) + 4}.max
+    w = data.collect{|d| pdf.width_of(d[0])}.max
     h = data.collect{|d| pdf.height_of(d[0])}.max
     data.each do |row|
       # start a new page if this list element will not fit on the given page
