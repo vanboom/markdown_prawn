@@ -1,4 +1,4 @@
-## 0.0.19  12 July 2016
+## 0.0.20  12 July 2016
 1. Improved orphan control for ListFragment using a dry run render instead of trying to calculate.  Previously the list item markdown could not be used in a stretchy bounding box.  The dry run method works properly within either stretchy or fixed bounding boxes.
 ## 0.0.15-18  16 June 2016
 1. Misc bug fixes to pdf wrapping and formatting.
