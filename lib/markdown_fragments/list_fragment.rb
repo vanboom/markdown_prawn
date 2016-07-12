@@ -25,15 +25,16 @@ class ListFragment < MarkdownFragment
     w = data.collect{|d| pdf.width_of(d[0])}.max
     h = data.collect{|d| pdf.height_of(d[0])}.max
     data.each do |row|
-      # start a new page if this list element will not fit on the given page
-      if pdf.cursor - pdf.height_of_formatted(format_line(row[0] + "    " + row[1]))-h < 0
+      # orphan control, start a new page if the item cannot be rendered completely on the current page
+      dr = Prawn::Text::Formatted::Box.new(format_line(row[1]), :at=>[w, pdf.cursor+h], :document=>pdf)
+      result = dr.render(:dry_run=>true)
+      if result.count > 0
         pdf.start_new_page
       end
       pdf.formatted_text(format_line(row[0]))
       pdf.formatted_text_box(format_line(row[1]), :at=>[w, pdf.cursor+h])
-      pdf.move_down pdf.height_of_formatted(format_line(row[0] + "    " + row[1]))-h
+      pdf.move_down(itemheight - h)
     end
-#    pdf.move_down pdf.height_of_formatted(format_line(data.last[1]))
   end
 
   def ordered?
