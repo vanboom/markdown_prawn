@@ -57,8 +57,6 @@ module MarkdownPrawn
 
         # finish the last paragraph and start a new one
         if line == ""
-          puts "__ append"
-          puts paragraph.content.inspect
           unless paragraph.content.join("").empty?
             @document_structure << paragraph
             paragraph = ParagraphFragment.new
