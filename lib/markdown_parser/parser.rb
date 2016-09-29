@@ -57,6 +57,8 @@ module MarkdownPrawn
 
         # finish the last paragraph and start a new one
         if line == ""
+          puts "__ append"
+          puts paragraph.content.inspect
           unless paragraph.content.join("").empty?
             @document_structure << paragraph
             paragraph = ParagraphFragment.new
@@ -100,6 +102,14 @@ module MarkdownPrawn
           heading.level = 2
           @document_structure << heading
           end
+        end
+
+        # Deal with task lists
+        #
+        if !/^(- \[ \])|(- \[[xX]\])+/.match(line).nil?
+          paragraph.content = paragraph.content.delete_if { |i| i == line }
+          task = TaskFragment.new([line])
+          @document_structure << task
         end
 
         # Deal with all other kinds of horizontal rules

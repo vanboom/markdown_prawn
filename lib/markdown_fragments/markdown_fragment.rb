@@ -5,9 +5,9 @@ class MarkdownFragment
   LEADING = 2
   @@formats = [
                 {:r=>/\*{2}(.*)\*{2}/, :format=>{:styles=>[:bold]}},
-                {:r=>/__\*([\w\d\s]*)\*__/, :format=>{:styles=>[:bold, :italic]}},
-                {:r=>/\*{1}([\w\d\s]*)\*{1}/, :format=>{:styles=>[:italic]}},
-                {:r=>/`\b([\w\d\s]*)`/, :format=>{:font=>"Courier"}}, # inline monospace
+                {:r=>/__\*([\w\d\s`]*)\*__/, :format=>{:styles=>[:bold, :italic]}},
+                {:r=>/\*([^\*]*)\*/, :format=>{:styles=>[:italic]}},
+                {:r=>/`([^`]*)`/, :format=>{:font=>"Courier"}}, # inline monospace
                 {:r=>/(\[(.+?)\]\((.+?)\))/, :format=>:hyperlink}   # hyperlinks
               ]
 
@@ -103,7 +103,7 @@ class MarkdownFragment
     options = { :fill_color   => LIGHT_GRAY,
       :stroke_color => nil,
       :text_color   => '666666',
-      :leading      => LEADING 
+      :leading      => LEADING
     }.merge(options)
 
     text_options = { :leading        => options[:leading],

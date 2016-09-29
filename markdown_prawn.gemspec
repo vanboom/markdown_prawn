@@ -1,7 +1,7 @@
 description = "Markdown Parawn is a library and an executable script which allow you to generate a PDF from any valid Markdown. Thanks to Ryan Stenhouse for starting this development!"
 Gem::Specification.new do |spec|
   spec.name = "markdown_prawn"
-  spec.version = '0.0.20'
+  spec.version = '0.0.21'
   spec.platform = Gem::Platform::RUBY
   spec.files =  Dir.glob("{bin,lib,test}/**/**/*") +
                       ["Rakefile", "markdown_prawn.gemspec"]
