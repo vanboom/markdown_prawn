@@ -4,7 +4,7 @@ class HeadingFragment < MarkdownFragment
     def render_on(pdf_object, options = {})
       arguments = _default_render_options.merge(options)
       pdf_object.move_down 12
-      pdf_object.text @content.join(' '), arguments
+      pdf_object.formatted_text formatted_content, arguments
     end
 
   private
