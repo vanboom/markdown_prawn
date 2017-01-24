@@ -39,7 +39,7 @@ class TableFragment < MarkdownFragment
   private
 
   def _default_render_options
-    options = { :row_colors=>["dfdfdf","efefef"], :cell_style=>{:border_color=>"cdcdcd", :inline_format=>true}}
+    options = { :row_colors=>["efefef","fefefe"], :cell_style=>{:border_color=>"ababab", :border_width=>0.11, :inline_format=>true}}
     options
   end
 

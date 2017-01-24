@@ -2,7 +2,6 @@ class BlockquoteFragment < MarkdownFragment
 
   def render_on(pdf, options = {})
     arguments = _default_render_options.merge(options)
-
     blockquote_box(pdf, formatted_content)
   end
 

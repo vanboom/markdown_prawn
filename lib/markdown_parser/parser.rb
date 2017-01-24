@@ -45,7 +45,7 @@ module MarkdownPrawn
       # Assume everything is part of a paragraph by default and
       # add its content to the current in-scope paragraph object.
       #
-        unless paragraph.instance_of? TableFragment
+        unless (paragraph.instance_of?(TableFragment) or line.empty?)
           paragraph.content << line
         end
 
@@ -195,10 +195,10 @@ module MarkdownPrawn
         unless /^(>+)(\s?)\S/.match(line).nil?
           paragraph.content = paragraph.content.delete_if { |i| i == line }
           hashes = $1.dup
-          blockquote = BlockquoteFragment.new([line[1..-1]])
-        # start a new paragraph
-        #@document_structure << blockquote
-        paragraph = blockquote
+          blockquote = BlockquoteFragment.new([line[1..-1].strip])
+          # start a new paragraph
+          #@document_structure << blockquote
+          paragraph = blockquote
         end
 
         line.scan( /^(```)/ ) do |val|

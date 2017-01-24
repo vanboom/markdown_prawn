@@ -1,7 +1,7 @@
 class MarkdownFragment
   attr_accessor :content
   INNER_MARGIN = 30
-  RHYTHM = 10
+  RHYTHM = 6
   LEADING = 2
   @@formats = [
                 {:r=>/\*{2}(.*)\*{2}/, :format=>{:styles=>[:bold]}},
@@ -112,33 +112,35 @@ class MarkdownFragment
     f = pdf.fill_color
     s = pdf.stroke_color
 
-    box_height = pdf.height_of_formatted(box_text, text_options)
-
+    box_height = 0
+    pdf.bounding_box([RHYTHM, pdf.cursor], :width=>pdf.bounds.width-(RHYTHM*2)) do
+      box_height = pdf.height_of_formatted(box_text, text_options)
+    end
     # if the cursor is near the bottom of the page
     # yet another Prawn formatting pos
-    if pdf.cursor < box_height*2
+    if pdf.cursor < box_height + RHYTHM
       pdf.start_new_page
     end
-    pdf.bounding_box([INNER_MARGIN + RHYTHM, pdf.cursor],
-    :width => pdf.bounds.width - (INNER_MARGIN+RHYTHM)*2) do
+    pdf.move_down RHYTHM
+    pdf.bounding_box([RHYTHM, pdf.cursor],
+    :width => pdf.bounds.width - (RHYTHM*2)) do
 
       pdf.fill_color   options[:fill_color]
       pdf.stroke_color options[:stroke_color] || options[:fill_color]
       pdf.fill_and_stroke_rounded_rectangle(
       [pdf.bounds.left - RHYTHM, pdf.cursor],
       pdf.bounds.left + pdf.bounds.right + RHYTHM*2,
-      box_height + RHYTHM*2,
+      box_height + RHYTHM,
       0
       )
       pdf.fill_color   LIGHT_GRAY
       pdf.stroke_color GRAY
-      pdf.stroke_line [pdf.bounds.left - RHYTHM, pdf.cursor], [pdf.bounds.left-RHYTHM, -box_height-RHYTHM*2]
-
+      pdf.stroke_line [pdf.bounds.left - RHYTHM, pdf.cursor], [pdf.bounds.left-RHYTHM, -box_height-RHYTHM]
       pdf.pad(RHYTHM) do
         pdf.formatted_text(box_text, text_options)
       end
     end
-    pdf.move_down(RHYTHM*2)
+    pdf.move_down(RHYTHM)
     pdf.fill_color = f
     pdf.stroke_color = s
   end

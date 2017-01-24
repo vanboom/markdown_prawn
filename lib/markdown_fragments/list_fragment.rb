@@ -2,9 +2,9 @@ class ListFragment < MarkdownFragment
   attr_accessor :ordered
 
   def render_on(pdf, options = {})
-    bullet = '• '
+    bullet = '•'
+    bullet = "\u2022".encode('utf-8')
     arguments = _default_render_options.merge(options)
-    width = ((pdf.bounds.width / 100) * 90)
     data = []
 
     @content.each_with_index do |item, i|
@@ -22,8 +22,14 @@ class ListFragment < MarkdownFragment
     #       column(0).style( { :width => 20  })
     #    end
     #    pdf.move_down(5)
-    w = data.collect{|d| pdf.width_of(d[0] + " ")}.max
     h = data.collect{|d| pdf.height_of(d[0] + " ")}.max
+
+    if ordered?
+      w = data.collect{|d| pdf.width_of(d[0] + " ")}.max
+    else
+      w = 7.5
+    end
+
     data.each do |row|
       itemheight = pdf.height_of_formatted(format_line(row[0] + "  " + row[1]))
       # orphan control, start a new page if the dry run returns unprinted text
