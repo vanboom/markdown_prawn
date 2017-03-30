@@ -41,7 +41,7 @@ class MarkdownFragment
   # provide pre_text as if you were doing a formatted_text
   def code(pdf, pre_text)
     #pre_text = ::CodeRay.scan(pre_text, :ruby).to_prawn
-    pdf.font('Courier', :size => 12) do
+    pdf.font('Courier') do
       #colored_box(pdf, pre_text)
       pdf.indent(32) do
         pdf.formatted_text(pre_text)
@@ -162,7 +162,8 @@ class MarkdownFragment
       @@formats.each do |f|
         s.scan_until f[:r]
         if not s.matched_size.nil?
-          if f[:format] == :hyperlink
+          case f[:format]
+          when :hyperlink
             formatted[j] = [{:text=>s.pre_match}, {:text=>s[2], :color=>'315f91', :link=>s[3]}, {:text=>s.post_match}]
           else
             formatted[j] = [{:text=>s.pre_match}, {:text=>s[1]}.merge(f[:format]), {:text=>s.post_match}]
