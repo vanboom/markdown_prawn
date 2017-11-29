@@ -31,7 +31,8 @@ class ListFragment < MarkdownFragment
     end
 
     data.each do |row|
-      itemheight = pdf.height_of_formatted(format_line(row[0] + "  " + row[1]))
+      itemheight = pdf.height_of_formatted(format_line(row[0] + "  " + row[1]), :at=>[w, pdf.cursor+h])
+
       # orphan control, start a new page if the dry run returns unprinted text
       dr = Prawn::Text::Formatted::Box.new(format_line(row[1]), :at=>[w, pdf.cursor+h], :document=>pdf)
       result = dr.render(:dry_run=>true)
