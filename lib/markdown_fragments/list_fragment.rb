@@ -23,7 +23,6 @@ class ListFragment < MarkdownFragment
     #    end
     #    pdf.move_down(5)
     h = data.collect{|d| pdf.height_of(d[0] + " ")}.max
-
     if ordered?
       w = data.collect{|d| pdf.width_of(d[0] + " ")}.max
     else
@@ -31,14 +30,15 @@ class ListFragment < MarkdownFragment
     end
     data.each do |row|
       itemheight = pdf.height_of_formatted(format_line(row[1]), :at=>[w.to_i, pdf.cursor+h])
-      # orphan control, start a new page if the dry run returns unprinted text
-      dr = Prawn::Text::Formatted::Box.new(format_line(row[1]), :at=>[w, pdf.cursor+h], :document=>pdf)
+      # orphan control, start a new page if the dry run returns unprinted text, pdf.cursor-h forces it down one line
+      dr = Prawn::Text::Formatted::Box.new(format_line(row[1]), :at=>[w, pdf.cursor-h], :document=>pdf)
       result = dr.render(:dry_run=>true)
       if result.count > 0
         pdf.start_new_page
       end
       pdf.formatted_text(format_line(row[0] + " "))
-      pdf.formatted_text_box(format_line(row[1]), :at=>[w, pdf.cursor+h])
+      c = pdf.cursor
+      pdf.formatted_text_box(format_line(row[1]), :at=>[w, c+h])
       pdf.move_down(itemheight - h)
     end
 #    pdf.move_down pdf.height_of_formatted(format_line(data.last[1]))
