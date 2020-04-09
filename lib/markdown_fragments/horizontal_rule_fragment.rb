@@ -13,7 +13,7 @@ class HorizontalRuleFragment < MarkdownFragment
 private
 
   def _default_render_options
-    options = { :size => 12, :align => :left, :leading => 2 }
+    options = { :size => 8, :align => :left, :leading => 2 }
     options = options.merge({:inline_format => true})
     options
   end
