@@ -1,6 +1,11 @@
 require File.dirname(__FILE__) + '/../markdown_fragments.rb'
 
 module MarkdownPrawn
+  RX_NUM_LIST = /^\s?\*\s/.freeze
+  RX_BUL_LIST = /^\s?\d+\.\s/.freeze
+  RX_SUB_NUM_LIST = /^\s*\*\s/.freeze
+  RX_SUB_BUL_LIST = /^\s*\d+\.\s/.freeze
+
   # Horribly bodgy and wrong markdown parser which should just about do
   # for a proof of concept. Some of the code comes from mislav's original
   # BlueCloth since I cant find the source of a newer versoin.
@@ -132,15 +137,15 @@ module MarkdownPrawn
 
           # Check to see if we've got a new list item.
           #
-          if (!/^\s?\*\s/.match(line).nil? || !/^\s?\d+\.\s/.match(line).nil?)
+          if (!RX_BUL_LIST.match(line).nil? || !RX_NUM_LIST.match(line).nil?)
 
             # Find out if this new list item is for a different type of list
             # and deal with that before adding the new list item.
             #
-            if list.ordered? && !/^\s?\*\s/.match(line).nil?
+            if list.ordered? && !RX_NUM_LIST.match(line).nil?
               @document_structure << list
               list = ListFragment.new
-            elsif !list.ordered? && !/^\s?\d+\.\s/.match(line).nil?
+            elsif !list.ordered? && !RX_BUL_LIST.match(line).nil?
               @document_structure << list
               list = ListFragment.new
             list.ordered = true
@@ -148,7 +153,7 @@ module MarkdownPrawn
 
             # Remove the list style and add the new list item.
             #
-            list.content << line.sub(/^\s?\*\s/,'').sub(/^\s?\d+\.\s/,'')
+            list.content << line.sub(RX_NUM_LIST,'').sub(RX_BUL_LIST,'')
 
           else
           # If this line isn't a new list item, then it's a continuation for the current
@@ -167,12 +172,12 @@ module MarkdownPrawn
         else
         # Not currently in a list, but we've detected a list item
         #
-          if (!/^\s?\*\s/.match(line).nil? || !/^\s?\d+\.\s/.match(line).nil?)
+          if (!RX_NUM_LIST.match(line).nil? || !RX_BUL_LIST.match(line).nil?)
             ordered = false
-            ordered = true if !/^\s?\d+\.\s/.match(line).nil?
+            ordered = true if !RX_BUL_LIST.match(line).nil?
             list = ListFragment.new
             list.ordered = ordered
-            list.content << line.sub(/^\s?\*\s/,'').sub(/^\s?\d+\.\s/,'')
+            list.content << line.sub(RX_NUM_LIST,'').sub(RX_BUL_LIST,'')
             paragraph.content = paragraph.content.delete_if { |i| i == line }
           in_list = true
           end
