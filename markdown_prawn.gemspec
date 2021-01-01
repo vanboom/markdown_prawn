@@ -14,7 +14,7 @@ Gem::Specification.new do |spec|
   spec.author = "Don Vanboom"
   spec.email = "dvboom@hotmail.com"
   spec.rubyforge_project = "markdown_prawn"
-  spec.add_dependency('prawn')
+  spec.add_dependency('prawn', ~>'2.2.2')
   spec.homepage = "http://github.com/vanboom"
   spec.summary = description
   spec.description = description
