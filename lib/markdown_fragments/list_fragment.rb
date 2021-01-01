@@ -28,19 +28,24 @@ class ListFragment < MarkdownFragment
     else
       w = 7.5
     end
-    data.each do |row|
-      itemheight = pdf.height_of_formatted(format_line(row[1]), :at=>[w.to_i, pdf.cursor+h])
-      # orphan control, start a new page if the dry run returns unprinted text, pdf.cursor-h forces it down one line
-      dr = Prawn::Text::Formatted::Box.new(format_line(row[1]), :at=>[w, pdf.cursor-h], :document=>pdf)
-      result = dr.render(:dry_run=>true)
-      if result.count > 0
-        pdf.start_new_page
-      end
-      pdf.formatted_text(format_line(row[0] + " "))
-      c = pdf.cursor
-      pdf.formatted_text_box(format_line(row[1]), :at=>[w, c+h])
-      pdf.move_down(itemheight - h)
-    end
+
+    ##
+    # New Way, use a table to render the list.  
+    t = pdf.make_table data, {cell_style: {borders: [], align: :justify, padding: [0, 4, 0, 0], header: true}}
+    t.draw
+    # data.each do |row|
+    #   itemheight = pdf.height_of_formatted(format_line(row[1]), :at=>[w.to_i, pdf.cursor+h])
+    #   # orphan control, start a new page if the dry run returns unprinted text, pdf.cursor-h forces it down one line
+    #   dr = Prawn::Text::Formatted::Box.new(format_line(row[1]), :at=>[w, pdf.cursor-h], :document=>pdf)
+    #   result = dr.render(:dry_run=>true)
+    #   if result.count > 0
+    #     pdf.start_new_page
+    #   end
+    #   pdf.formatted_text(format_line(row[0] + " "))
+    #   c = pdf.cursor
+    #   pdf.formatted_text_box(format_line(row[1]), :at=>[w, c+h])
+    #   pdf.move_down(itemheight - h)
+    # end
 #    pdf.move_down pdf.height_of_formatted(format_line(data.last[1]))
   end
 

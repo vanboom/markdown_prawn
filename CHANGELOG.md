@@ -1,3 +1,5 @@
+## 0.0.32 1 Jan 2021
+1. Use a table to render bullet and numbered lists. 
 ## 0.0.29  30 Nov 2017
 1. Improved calculation of line item height.
 ## 0.0.20  12 July 2016
