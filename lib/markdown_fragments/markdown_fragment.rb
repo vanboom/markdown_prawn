@@ -5,7 +5,7 @@ class MarkdownFragment
   LEADING = 2
   @@formats = [
                 {:r=>/\*{2}(.*)\*{2}/, :format=>{:styles=>[:bold]}},
-                {:r=>/__\*([\w\d\s`]*)\*__/, :format=>{:styles=>[:bold, :italic]}},
+                {:r=>/__\*([\w\s`]*)\*__/, :format=>{:styles=>[:bold, :italic]}},
                 {:r=>/\*([^\*]*)\*/, :format=>{:styles=>[:italic]}},
                 {:r=>/`([^`]*)`/, :format=>{:font=>"Courier"}}, # inline monospace
                 {:r=>/(\[(.+?)\]\((.+?)\))/, :format=>:hyperlink}   # hyperlinks

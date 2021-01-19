@@ -1,10 +1,10 @@
 require File.dirname(__FILE__) + '/../markdown_fragments.rb'
 
 module MarkdownPrawn
-  RX_NUM_LIST = /^\s?\*\s/.freeze
-  RX_BUL_LIST = /^\s?\d+\.\s/.freeze
-  RX_SUB_NUM_LIST = /^\s*\*\s/.freeze
-  RX_SUB_BUL_LIST = /^\s*\d+\.\s/.freeze
+  # RX_BUL_LIST = /^\s?\*\s/.freeze
+  # RX_NUM_LIST = /^\s?\d+\.\s/.freeze
+  # RX_SUB_BUL_LIST = /^\s*\*\s/.freeze
+  # RX_SUB_NUM_LIST = /^\s*\d+\.\s/.freeze
 
   # Horribly bodgy and wrong markdown parser which should just about do
   # for a proof of concept. Some of the code comes from mislav's original
@@ -40,9 +40,11 @@ module MarkdownPrawn
     end
 
     def parse
+      list_item_parser = ListItemParser.new
       paragraph = ParagraphFragment.new
-      list = ListFragment.new
-      in_list = false
+      # list = ListFragment.new
+      # in_list = false
+      # prev_line = ''
       @content.each_with_index do |line, index|
       #        line = process_inline_formatting(line)
       #        line = process_inline_hyperlinks(line)
@@ -55,13 +57,15 @@ module MarkdownPrawn
         end
 
         # finish a preformatted block
-        if /^(```)/.match(line).present? and paragraph.instance_of? PreFragment
+        if !/^(```)/.match(line).nil? and paragraph.instance_of? PreFragment
           # skip and reset
           line = ""
         end
 
         # finish the last paragraph and start a new one
         if line == ""
+          # DP: allow one newline to pass - double newline in markdown creates a single newline
+          # THIS CODE IS NOT WORKING, can't get the double newline
           unless paragraph.content.join("").empty?
             @document_structure << paragraph
             paragraph = ParagraphFragment.new
@@ -108,7 +112,6 @@ module MarkdownPrawn
         end
 
         # Deal with task lists
-        #
         if !/^(- \[ \])|(- \[[xX]\])+/.match(line).nil?
           paragraph.content = paragraph.content.delete_if { |i| i == line }
           task = TaskFragment.new([line])
@@ -116,7 +119,6 @@ module MarkdownPrawn
         end
 
         # Deal with all other kinds of horizontal rules
-        #
         if !/^(\*+)(\s)?(\*+)(\s)?(\*+)/.match(line).nil? || !/^(-+)(\s)(-+)(\s)(-+)/.match(line).nil?
           if @content[index - 1].strip == ''
             paragraph.content = paragraph.content.delete_if { |i| i == line }
@@ -124,63 +126,9 @@ module MarkdownPrawn
           end
         end
 
-        # Try to deal with lists.
-        #
-        if in_list
-          # We're in a list just now.
-          #
-
-          # Remove the content from the paragraph where it will have
-          # automatically been appended
-          #
-          paragraph.content = paragraph.content.delete_if { |i| i == line }
-
-          # Check to see if we've got a new list item.
-          #
-          if (!RX_BUL_LIST.match(line).nil? || !RX_NUM_LIST.match(line).nil?)
-
-            # Find out if this new list item is for a different type of list
-            # and deal with that before adding the new list item.
-            #
-            if list.ordered? && !RX_NUM_LIST.match(line).nil?
-              @document_structure << list
-              list = ListFragment.new
-            elsif !list.ordered? && !RX_BUL_LIST.match(line).nil?
-              @document_structure << list
-              list = ListFragment.new
-            list.ordered = true
-            end
-
-            # Remove the list style and add the new list item.
-            #
-            list.content << line.sub(RX_NUM_LIST,'').sub(RX_BUL_LIST,'')
-
-          else
-          # If this line isn't a new list item, then it's a continuation for the current
-          # list item.
-          #
-          list.content[-1] += line
-          end
-
-          # If the current line is empty, then we're done with the list.
-          #
-          if line == ''
-            @document_structure << list
-            list = ListFragment.new
-          in_list = false
-          end
-        else
-        # Not currently in a list, but we've detected a list item
-        #
-          if (!RX_NUM_LIST.match(line).nil? || !RX_BUL_LIST.match(line).nil?)
-            ordered = false
-            ordered = true if !RX_BUL_LIST.match(line).nil?
-            list = ListFragment.new
-            list.ordered = ordered
-            list.content << line.sub(RX_NUM_LIST,'').sub(RX_BUL_LIST,'')
-            paragraph.content = paragraph.content.delete_if { |i| i == line }
-          in_list = true
-          end
+        lfr = list_item_parser.process_line(line, @document_structure)
+        if !lfr.nil?
+          paragraph.content = paragraph.content.delete_if { |i| i == lfr }
         end
 
         # Deal with a link reference by adding it ot the list of references
@@ -239,11 +187,18 @@ module MarkdownPrawn
           end
         end
       end
-      if !list.content.empty? && ! @document_structure.include?(list)
-        @document_structure << list
-        list = ListFragment.new
+
+      # if !list.content.empty? && ! @document_structure.include?(list)
+      #   @document_structure << list
+      #   list = ListFragment.new
+      # end
+
+      # flush any open lists
+      if list_item_parser.list_open?
+        @document_structure << list_item_parser.list_fragment
       end
-      @document_structure << paragraph unless paragraph.content == ''
+
+      @document_structure << paragraph unless paragraph.content.join("").empty?
       @document_structure << @links_list[:object] if !@links_list[:urls_seen].empty?
     end
 

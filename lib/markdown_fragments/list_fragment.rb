@@ -4,17 +4,19 @@ class ListFragment < MarkdownFragment
   def render_on(pdf, options = {})
     bullet = '•'
     bullet = "\u2022".encode('utf-8')
-    arguments = _default_render_options.merge(options)
+    options = _default_render_options.merge(options)
     data = []
-
+    j = 0
     @content.each_with_index do |item, i|
-    # Strip any un-needed white space
-    #
+      # Strip any un-needed white space
       item = item.gsub(/\s\s+/,' ')
-      if ordered?
-        bullet = "#{i+1}."
+      if item == ""
+        bullet = ""
+      elsif ordered?
+        j = j + 1
+        bullet = "#{j}."
       end
-      data << [bullet,item]
+      data << [bullet,item.presence || "\n"]
     end
 
     #    pdf.table data, arguments.merge({:width => width}) do
@@ -22,7 +24,7 @@ class ListFragment < MarkdownFragment
     #       column(0).style( { :width => 20  })
     #    end
     #    pdf.move_down(5)
-    h = data.collect{|d| pdf.height_of(d[0] + " ")}.max
+#    h = data.collect{|d| pdf.height_of(d[0] + " ")}.max
     if ordered?
       w = data.collect{|d| pdf.width_of(d[0] + " ")}.max
     else
@@ -30,23 +32,12 @@ class ListFragment < MarkdownFragment
     end
 
     ##
-    # New Way, use a table to render the list.  
-    t = pdf.make_table data, {cell_style: {borders: [], align: :justify, padding: [0, 4, 0, 0], header: true}}
-    t.draw
-    # data.each do |row|
-    #   itemheight = pdf.height_of_formatted(format_line(row[1]), :at=>[w.to_i, pdf.cursor+h])
-    #   # orphan control, start a new page if the dry run returns unprinted text, pdf.cursor-h forces it down one line
-    #   dr = Prawn::Text::Formatted::Box.new(format_line(row[1]), :at=>[w, pdf.cursor-h], :document=>pdf)
-    #   result = dr.render(:dry_run=>true)
-    #   if result.count > 0
-    #     pdf.start_new_page
-    #   end
-    #   pdf.formatted_text(format_line(row[0] + " "))
-    #   c = pdf.cursor
-    #   pdf.formatted_text_box(format_line(row[1]), :at=>[w, c+h])
-    #   pdf.move_down(itemheight - h)
-    # end
-#    pdf.move_down pdf.height_of_formatted(format_line(data.last[1]))
+    # New Way, use a table to render the list.
+    pdf.pad(RHYTHM/2) do
+      t = pdf.make_table data, options
+      t.draw
+    end
+
   end
 
   def ordered?
@@ -57,7 +48,7 @@ class ListFragment < MarkdownFragment
 
   def _default_render_options
     options = {}
-    options = options.merge({:cell_style => {:padding=>[0, 0, 0, 0], :inline_format => true}})
+    options = options.merge( cell_style: {borders: [], align: :justify, padding: [0, 4, 0, 0]}, header: true )
     options
   end
 

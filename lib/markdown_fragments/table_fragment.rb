@@ -29,9 +29,11 @@ class TableFragment < MarkdownFragment
       end
     end
 
-    pdf.table rows, arguments do
-      headers.each do |i|
-        row(i).font_style = :bold
+    pdf.pad(RHYTHM*1.5) do
+      pdf.table rows, arguments do
+        headers.each do |ii|
+          row(ii).font_style = :bold
+        end
       end
     end
   end
@@ -39,7 +41,11 @@ class TableFragment < MarkdownFragment
   private
 
   def _default_render_options
-    options = { :row_colors=>["efefef","fefefe"], :cell_style=>{:border_color=>"ababab", :border_width=>0.11, :inline_format=>true}}
+    options = {
+      :row_colors=>["efefef","fefefe"],
+      :cell_style=>{:border_color=>"ababab", :border_width=>0.11, :inline_format=>true, padding: [3, 4, 3, 4]},
+      }
+
     options
   end
 
