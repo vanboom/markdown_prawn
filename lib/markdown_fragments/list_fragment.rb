@@ -8,7 +8,6 @@ class ListFragment < MarkdownFragment
     @content.each_with_index do |item, i|
       # Strip any un-needed white space
       if item.is_a? Array
-        ap item
         data << ["", pdf.make_table(item, _default_render_options)]
       else
         item = item.gsub(/\s\s+/,' ')
