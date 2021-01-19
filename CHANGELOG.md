@@ -1,5 +1,8 @@
+## 0.0.34 18 Jan 2021
+1. Add support for nested list items
 ## 0.0.33 18 Jan 2021
 1. Fix list item continuation issues.
+1. Rewrite of list item processing.
 ## 0.0.32 1 Jan 2021
 1. Use a table to render bullet and numbered lists.
 ## 0.0.29  30 Nov 2017

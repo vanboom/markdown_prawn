@@ -5,7 +5,7 @@ module MarkdownPrawn
   RX_NUM_LIST = /^\s?\d+\.\s/
   RX_SUB_BUL_LIST = /^\s*\*\s/
   RX_SUB_NUM_LIST = /^\s*\d+\.\s/
-
+	SUB_BULLET = "\u2022".encode('utf-8').freeze
   # Horribly bodgy and wrong markdown parser which should just about do
   # for a proof of concept. Some of the code comes from mislav's original
   # BlueCloth since I cant find the source of a newer versoin.
@@ -13,9 +13,11 @@ module MarkdownPrawn
   class ListItemParser
     attr_accessor :list_fragment
     attr_accessor :prev_line
+    attr_accessor :sub_item_count
 
     def initialize
       @list_fragment = nil
+      @sub_item_count = 0
     end
 
     ##
@@ -28,6 +30,10 @@ module MarkdownPrawn
         if same_list_item?(line)
           consume = line
           add_to_list(line)
+        elsif is_sub_item?(line)
+          consume = line
+          # pass to sub lit
+          add_sub_item(line)
         elsif is_list_item?(line)
           # close and start a new lists
           close_list!(line, document)
@@ -65,8 +71,23 @@ module MarkdownPrawn
     end
 
     def add_to_list(line)
-      @list_fragment.content << line.sub(RX_NUM_LIST, '').sub(RX_BUL_LIST, '')
+      @list_fragment.content << sanitize(line)
     end
+
+    def sanitize(line)
+      line.sub(RX_NUM_LIST, '').sub(RX_BUL_LIST, '').sub(RX_SUB_BUL_LIST, "").sub(RX_SUB_NUM_LIST, "")
+    end
+
+    def add_sub_item(line)
+      @sub_item_count += 1
+      cell0 = is_sub_bulleted?(line) ? SUB_BULLET : "#{@sub_item_count}. "
+      if @list_fragment.content.last.is_a? Array
+        @list_fragment.content.last << [cell0, sanitize(line)]
+      else
+        @list_fragment.content << [[cell0, sanitize(line)]]
+      end
+    end
+
 
     def append_last_item(line)
       @list_fragment.content[-1] += (" " + line)
@@ -89,6 +110,7 @@ module MarkdownPrawn
     end
 
     def open_new_list!(line)
+      @sub_item_count = 0
       if @list_fragment.nil?
         if !RX_NUM_LIST.match(line).nil?
           open_ordered!
@@ -100,6 +122,17 @@ module MarkdownPrawn
 
     def is_list_item?(line)
       ordered_list_item?(line) || bulleted_list_item?(line)
+    end
+
+    def is_sub_ordered?(line)
+      !RX_SUB_NUM_LIST.match(line).nil?
+    end
+    def is_sub_bulleted?(line)
+      !RX_SUB_BUL_LIST.match(line).nil?
+    end
+
+    def is_sub_item?(line)
+      is_sub_bulleted?(line) or is_sub_ordered?(line)
     end
 
     def ordered_list_item?(line)
