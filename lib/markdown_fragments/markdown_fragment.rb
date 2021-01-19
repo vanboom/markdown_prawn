@@ -121,18 +121,19 @@ class MarkdownFragment
     if pdf.cursor < box_height + RHYTHM
       pdf.start_new_page
     end
-    pdf.move_down RHYTHM
+    pdf.move_down RHYTHM/2
     pdf.bounding_box([RHYTHM, pdf.cursor],
     :width => pdf.bounds.width - (RHYTHM*2)) do
 
       pdf.fill_color   options[:fill_color]
       pdf.stroke_color options[:stroke_color] || options[:fill_color]
-      pdf.fill_and_stroke_rounded_rectangle(
-      [pdf.bounds.left - RHYTHM, pdf.cursor],
-      pdf.bounds.left + pdf.bounds.right + RHYTHM*2,
-      box_height + RHYTHM,
-      0
-      )
+      # the blockquotes look better with a left margin line and a grey text
+      # pdf.fill_and_stroke_rounded_rectangle(
+      #   [pdf.bounds.left - RHYTHM, pdf.cursor],
+      #   pdf.bounds.left + pdf.bounds.right + RHYTHM*2,
+      #   box_height + RHYTHM,
+      #   0
+      # )
       pdf.fill_color   LIGHT_GRAY
       pdf.stroke_color GRAY
       pdf.stroke_line [pdf.bounds.left - RHYTHM, pdf.cursor], [pdf.bounds.left-RHYTHM, -box_height-RHYTHM]
@@ -140,7 +141,7 @@ class MarkdownFragment
         pdf.formatted_text(box_text, text_options)
       end
     end
-    pdf.move_down(RHYTHM)
+    pdf.move_down(RHYTHM/2)
     pdf.fill_color = f
     pdf.stroke_color = s
   end
