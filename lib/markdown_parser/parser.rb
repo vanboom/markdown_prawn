@@ -178,7 +178,7 @@ module MarkdownPrawn
         unless /\|/.match(line).nil?
           paragraph.content = paragraph.content.delete_if { |i| i == line }
           line.chomp!("|")
-          line.reverse!.chomp!("|").reverse!
+          line = line.reverse.chomp("|").reverse
           if paragraph.instance_of? TableFragment
             # continue the table
             paragraph.content << line.split("|")
