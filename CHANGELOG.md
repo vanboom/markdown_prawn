@@ -1,3 +1,5 @@
+## 0.0.36 25 Feb 2021
+1. Bug fix list item table output.
 ## 0.0.35 18 Jan 2021
 1. Corrected bug with table parsing
 ## 0.0.34 18 Jan 2021
