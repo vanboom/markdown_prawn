@@ -10,7 +10,6 @@ Gem::Specification.new do |spec|
   spec.required_rubygems_version = ">= 1.3.6"
 
   spec.test_files = Dir[ "test/*_test.rb" ]
-  spec.has_rdoc = false
   spec.author = "Don Vanboom"
   spec.email = "dvboom@hotmail.com"
   spec.rubyforge_project = "markdown_prawn"
