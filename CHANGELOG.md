@@ -1,3 +1,5 @@
+## 0.0.37 18 Oct 2021
+1. Restrict options into table fragment.
 ## 0.0.36 12 Oct 2021
 1. Support options hash to markdown function.
 ## 0.0.36 25 Feb 2021

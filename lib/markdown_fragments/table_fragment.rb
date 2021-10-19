@@ -5,7 +5,7 @@ class TableFragment < MarkdownFragment
   /x.freeze
 
   def render_on(pdf, options = {})
-    arguments = _default_render_options.merge(options)
+    arguments = _default_render_options.merge(options.except(:size, :color))
     headers = []
     rows = []
     # if the table has a header
