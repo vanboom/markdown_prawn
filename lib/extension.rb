@@ -13,7 +13,7 @@ module MarkdownPrawn
       parser = MarkdownPrawn::StringParser.new(data)
       parser.parse!
       parser.document_structure.each do |fragment|
-        fragment.render_on(self, options)
+        fragment.render_on(self)
       end
     end
   end

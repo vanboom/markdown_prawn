@@ -1,3 +1,5 @@
+## 0.0.39 18 Oct 2021
+1. Rever 0.0.37, passing options into fragments has lots of pitfalls
 ## 0.0.37 18 Oct 2021
 1. Restrict options into table fragment.
 ## 0.0.36 12 Oct 2021
