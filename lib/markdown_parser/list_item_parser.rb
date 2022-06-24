@@ -1,9 +1,9 @@
 require File.dirname(__FILE__) + '/../markdown_fragments.rb'
 
 module MarkdownPrawn
-  RX_BUL_LIST = /^\s?\*\s/
+  RX_BUL_LIST = /^\s?[\*\-]\s/
   RX_NUM_LIST = /^\s?\d+\.\s/
-  RX_SUB_BUL_LIST = /^\s*\*\s/
+  RX_SUB_BUL_LIST = /^\s*[\*\-]\s/
   RX_SUB_NUM_LIST = /^\s*\d+\.\s/
 	SUB_BULLET = "\u2022".encode('utf-8').freeze
   # Horribly bodgy and wrong markdown parser which should just about do
