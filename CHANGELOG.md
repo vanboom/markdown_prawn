@@ -1,3 +1,5 @@
+## 0.0.40 24 Jun 2022
+1. Support list items beginning with - or *.
 ## 0.0.36 12 Oct 2021
 1. Support options hash to markdown function.
 ## 0.0.36 25 Feb 2021
