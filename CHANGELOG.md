@@ -1,5 +1,6 @@
-## 0.0.41 5 Aug 2022
-1. Deconflict task list items with list items. 
+## 0.0.43 5 Aug 2022
+1. Deconflict task list items with list items.
+1. Improve formatting of horizontal rule.
 ## 0.0.40 24 Jun 2022
 1. Support list items beginning with - or *.
 ## 0.0.36 12 Oct 2021
