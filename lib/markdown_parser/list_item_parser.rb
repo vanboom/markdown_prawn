@@ -23,6 +23,8 @@ module MarkdownPrawn
     ##
     # process the line and return anyting for the document
     def process_line(line, document)
+      # don't confuse task lists with item lists
+      return nil if line.include? "- [ ]"
       consume = nil
       # if we need to open a list?
       if list_open?
