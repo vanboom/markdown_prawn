@@ -1,3 +1,5 @@
+## 0.0.44 10 Aug 2022
+1. Improve item list handling.
 ## 0.0.43 5 Aug 2022
 1. Deconflict task list items with list items.
 1. Improve formatting of horizontal rule.

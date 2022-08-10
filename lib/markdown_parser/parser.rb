@@ -72,6 +72,20 @@ module MarkdownPrawn
           end
         end
 
+        # if we are starting a new list, dump existing paragraph
+        if !list_item_parser.list_open? and list_item_parser.is_list_item?(line)
+          unless paragraph.content.join("").empty?
+            paragraph.content = paragraph.content.delete_if { |i| i == line }
+            @document_structure << paragraph
+            paragraph = ParagraphFragment.new
+          end
+        end
+
+        lfr = list_item_parser.process_line(line, @document_structure)
+        if !lfr.nil?
+          paragraph.content = paragraph.content.delete_if { |i| i == lfr }
+        end
+
         # Deal with inline headings
         #
         unless /^(#+)(\s?)\S/.match(line).nil?
@@ -124,11 +138,6 @@ module MarkdownPrawn
             paragraph.content = paragraph.content.delete_if { |i| i == line }
             @document_structure << HorizontalRuleFragment.new
           end
-        end
-
-        lfr = list_item_parser.process_line(line, @document_structure)
-        if !lfr.nil?
-          paragraph.content = paragraph.content.delete_if { |i| i == lfr }
         end
 
         # Deal with a link reference by adding it ot the list of references
