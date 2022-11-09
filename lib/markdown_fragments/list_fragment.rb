@@ -53,7 +53,7 @@ class ListFragment < MarkdownFragment
 
   def _default_render_options
     options = {}
-    options = options.merge( borders: [], cell_style: { align: :justify, padding: [0.5, 4, 0.5, 0]}, header: false )
+    options = options.merge( cell_style: { border_width: 0, align: :justify, padding: [0.5, 4, 0.5, 0]}, header: false )
     options
   end
 
