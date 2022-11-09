@@ -8,7 +8,8 @@ class ListFragment < MarkdownFragment
     @content.each_with_index do |item, i|
       # Strip any un-needed white space
       if item.is_a? Array
-        data << ["", pdf.make_table(item, _default_render_options)]
+        # shrink embedded tables to avoid width constraints
+        data << ["", pdf.make_table(item, _default_render_options.merge(width: pdf.bounds.width - 24))]
       else
         item = item.gsub(/\s\s+/,' ')
         if item == ""
@@ -29,16 +30,16 @@ class ListFragment < MarkdownFragment
     #    end
     #    pdf.move_down(5)
 #    h = data.collect{|d| pdf.height_of(d[0] + " ")}.max
-    if ordered?
-      w = data.collect{|d| d.is_a?(String) ? pdf.width_of(d[0] + " ") : 0}.max
-    else
-      w = 7.5
-    end
+    # if ordered?
+    #   w = data.collect{|d| d.is_a?(String) ? pdf.width_of(d[0] + " ") : 0}.max
+    # else
+    #   w = 7.5
+    # end
 
     ##
     # New Way, use a table to render the list.
     pdf.pad(RHYTHM/2) do
-      t = pdf.make_table data, options
+      t = pdf.make_table data, options.merge(width: pdf.bounds.width + 24)
       t.draw
     end
 
@@ -52,7 +53,7 @@ class ListFragment < MarkdownFragment
 
   def _default_render_options
     options = {}
-    options = options.merge( cell_style: {borders: [], align: :justify, padding: [0.5, 4, 0.5, 0]}, header: false )
+    options = options.merge( borders: [], cell_style: { align: :justify, padding: [0.5, 4, 0.5, 0]}, header: false )
     options
   end
 

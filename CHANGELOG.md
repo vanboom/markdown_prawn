@@ -1,3 +1,5 @@
+## 0.0.45 9 November 2022
+1. Attempting to fix list item table width issue
 ## 0.0.44 10 Aug 2022
 1. Improve item list handling.
 ## 0.0.43 5 Aug 2022
