@@ -72,6 +72,14 @@ module MarkdownPrawn
           end
         end
 
+        # Deal with task lists
+        if !/^(- \[ \])|(- \[[xX]\])+/.match(line).nil?
+          paragraph.content = paragraph.content.delete_if { |i| i == line }
+          task = TaskFragment.new([line])
+          @document_structure << task
+          next
+        end
+
         # if we are starting a new list, dump existing paragraph
         if !list_item_parser.list_open? and list_item_parser.is_list_item?(line)
           unless paragraph.content.join("").empty?
@@ -123,13 +131,6 @@ module MarkdownPrawn
           heading.level = 2
           @document_structure << heading
           end
-        end
-
-        # Deal with task lists
-        if !/^(- \[ \])|(- \[[xX]\])+/.match(line).nil?
-          paragraph.content = paragraph.content.delete_if { |i| i == line }
-          task = TaskFragment.new([line])
-          @document_structure << task
         end
 
         # Deal with all other kinds of horizontal rules

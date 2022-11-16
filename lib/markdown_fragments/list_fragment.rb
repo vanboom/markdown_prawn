@@ -39,7 +39,7 @@ class ListFragment < MarkdownFragment
     ##
     # New Way, use a table to render the list.
     pdf.pad(RHYTHM/2) do
-      t = pdf.make_table data, options.merge(width: pdf.bounds.width + 24)
+      t = pdf.make_table data, options
       t.draw
     end
 
