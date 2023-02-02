@@ -185,7 +185,7 @@ module MarkdownPrawn
         to_replace = []
 
         # parse markup tables
-        unless /\|/.match(line).nil?
+        unless /(^\|)/.match(line).nil?
           paragraph.content = paragraph.content.delete_if { |i| i == line }
           line.chomp!("|")
           line = line.reverse.chomp("|").reverse

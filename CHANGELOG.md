@@ -1,3 +1,5 @@
+## 0.0.47 2 Feb 2023
+1. Fixed table detection regex
 ## 0.0.46 16 November 2022
 1. Fixed list item formatting again
 ## 0.0.45 9 November 2022
