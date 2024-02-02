@@ -56,6 +56,12 @@ module MarkdownPrawn
           paragraph.content << line
         end
 
+        # Handle the double space trick for new lines
+        if line.end_with?("  ") and paragraph.instance_of?(ParagraphFragment)
+          paragraph.content << "\n"
+        end
+
+
         # finish a preformatted block
         if !/^(```)/.match(line).nil? and paragraph.instance_of? PreFragment
           # skip and reset
