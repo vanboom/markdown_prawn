@@ -1,3 +1,5 @@
+## 0.0.48 2 Feb 2024
+1. Adjusted CODE method for less indenting.  Revisit the colored_box method in the future to more closely match the markdown standard HTML formatting.
 ## 0.0.47 2 Feb 2023
 1. Fixed table detection regex
 ## 0.0.46 16 November 2022

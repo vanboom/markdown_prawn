@@ -43,7 +43,7 @@ class MarkdownFragment
     #pre_text = ::CodeRay.scan(pre_text, :ruby).to_prawn
     pdf.font('Courier') do
       #colored_box(pdf, pre_text)
-      pdf.indent(32) do
+      pdf.indent(4) do
         pdf.formatted_text(pre_text)
       end
     end
