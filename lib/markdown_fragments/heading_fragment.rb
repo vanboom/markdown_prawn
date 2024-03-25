@@ -1,10 +1,13 @@
 class HeadingFragment < MarkdownFragment
   attr_accessor :level
-
+    ##
+    # Heading 4 size should be the same text size
+    # Then we go up 2 steps from there
     def render_on(pdf_object, options = {})
       arguments = _default_render_options.merge(options)
-      arguments.merge!( size: pdf_object.font_size + (2*@level))
-      pdf_object.move_down 12
+      h4_size = pdf_object.font_size
+      arguments.merge!( size: [h4_size, h4_size + (2 * (4 - @level))].max)
+      pdf_object.move_down 4
       pdf_object.formatted_text formatted_content, arguments
     end
 
