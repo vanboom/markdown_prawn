@@ -1,3 +1,5 @@
+## 0.0.51 22 Aug 2024
+1. Improve logic for malformed lists.
 ## 0.0.50 25 Mar 2024
 1. Fix logic for HeadingFragment size.
 ## 0.0.49 2 Feb 2024

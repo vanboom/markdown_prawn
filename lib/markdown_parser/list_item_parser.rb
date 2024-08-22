@@ -92,7 +92,11 @@ module MarkdownPrawn
 
 
     def append_last_item(line)
-      @list_fragment.content[-1] += (" " + line)
+      if @list_fragment.content[-1].is_a?(Array)
+        open_new_list!(line)
+      else
+        @list_fragment.content[-1] += (" " + line)
+      end
     end
 
     def open_ordered!
