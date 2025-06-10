@@ -9,7 +9,7 @@ class ListFragment < MarkdownFragment
       # Strip any un-needed white space
       if item.is_a? Array
         # shrink embedded tables to avoid width constraints
-        data << ["", pdf.make_table(item, _default_render_options.merge(width: pdf.bounds.width - 24))]
+        data << ["", pdf.make_table(item, _default_render_options.merge(column_widths: {0=>12}, width: pdf.bounds.width - 48))]
       else
         item = item.gsub(/\s\s+/,' ')
         if item == ""
@@ -20,7 +20,7 @@ class ListFragment < MarkdownFragment
         else
           bullet = BULLET
         end
-        data << [bullet,item.presence || "\n"]
+        data << [{content: bullet}, item.presence || "\n"]
       end
     end
 
@@ -39,7 +39,9 @@ class ListFragment < MarkdownFragment
     ##
     # New Way, use a table to render the list.
     pdf.pad(RHYTHM/2) do
-      t = pdf.make_table data, options
+      # improve control over the table width
+      ox = options.merge(column_widths: {0=>12}, width: pdf.bounds.width - RHYTHM - 24)
+      t = pdf.make_table data, ox
       t.draw
     end
 

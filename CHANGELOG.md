@@ -1,3 +1,5 @@
+## 0.0.52 10 June 2025
+1. Improve logic for list item fragments.
 ## 0.0.51 22 Aug 2024
 1. Improve logic for malformed lists.
 ## 0.0.50 25 Mar 2024
